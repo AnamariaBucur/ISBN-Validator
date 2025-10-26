@@ -7,26 +7,43 @@ import static junit.framework.TestCase.*;
 public class validateISBNTest {
 
     @Test
-    public void checkValidISBN() {
+    public void checkAValid10DigitISBN() {
         ValidateISBN validator = new ValidateISBN();
         boolean result = validator.checkISBN("0140449116");
         assertTrue("first value",result);
         result = validator.checkISBN("0140177396");
-        assertTrue("second value",result);
+        assertTrue("second value", result);
     }
 
     @Test
-    public void ISBNNumbersEndingInAnXAreValid() {
+    public void checkAValid13DigitISBN() {
+        ValidateISBN validator = new ValidateISBN();
+        boolean result = validator.checkISBN("9781853260087");
+        assertTrue("first value", result);
+        result = validator.checkISBN("9781853267338");
+        assertTrue("second value", result);
+    }
+
+    @Test
+    public void TenDigitISBNNumbersEndingInAnXAreValid() {
         ValidateISBN validator = new ValidateISBN();
         boolean result = validator.checkISBN("012000030X");
         assertTrue(result);
     }
 
     @Test
-    public void checkAnInvalidISBN() {
+    public void checkAnInvalid10DigitISBN() {
         ValidateISBN validator = new ValidateISBN();
         boolean result = validator.checkISBN("0140449117");
         assertFalse(result);
+    }
+
+    @Test
+    public void checkAnInvalid13DigitISBN() {
+        ValidateISBN validator = new ValidateISBN();
+        boolean result = validator.checkISBN("9781853267334");
+        assertFalse(result);
+
     }
 
     @Test(expected = NumberFormatException.class)
