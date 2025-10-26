@@ -11,10 +11,10 @@ public class ValidateISBN {
 
         if (isbn.length() == LONG_ISBN_LENGTH){
             return isThisAValidLongISBN(isbn);
-        } else {
-            if (isbn.length() != SHORT_ISBN_LENGTH) throw new NumberFormatException("ISBN numbers must be 10 digits long");
+        } else if (isbn.length() == SHORT_ISBN_LENGTH) {
             return isThisAValidShortISBN(isbn);
         }
+        throw new NumberFormatException("ISBN numbers must be 10 or 13 digits long");
     }
 
     private boolean isThisAValidLongISBN(String isbn) {
@@ -26,11 +26,7 @@ public class ValidateISBN {
                 total += Character.getNumericValue(isbn.charAt(i)) * 3;
             }
         }
-        if (total % LONG_ISBN_MULTIPLIER == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return (total % LONG_ISBN_MULTIPLIER == 0);
     }
 
     private boolean isThisAValidShortISBN(String isbn) {
@@ -46,10 +42,6 @@ public class ValidateISBN {
                 total += Character.getNumericValue(isbn.charAt(i)) * (SHORT_ISBN_LENGTH - i);
             }
         }
-        if (total % SHORT_ISBN_MULTIPLIER == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return (total % SHORT_ISBN_MULTIPLIER == 0);
     }
 }
