@@ -1,8 +1,8 @@
 package com.virtualpairprogrammers.isbntools;
 
 import org.junit.Test;
-
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class StockManagementTests {
 
@@ -30,5 +30,45 @@ public class StockManagementTests {
         String isbn = "0140177396";
         String locatorCode = stockManager.getLocatorCode(isbn);
         assertEquals("7396J4",locatorCode);
+    }
+
+    @Test
+    public void databaseIsUsedIfDataIsPresent() {
+        //create a mocked object using Mockito
+        //mock method creates a dummy class that is an implementation of the interface
+        ExternalISBNDataService databaseService = mock(ExternalISBNDataService.class, withSettings().lenient());
+        ExternalISBNDataService webService = mock(ExternalISBNDataService.class, withSettings().lenient());
+
+
+        when(databaseService.lookup("0140177396")).thenReturn(new Book("0140177396", "abc", "abc"));
+
+        StockManager stockManager = new StockManager();
+        stockManager.setWebService(webService);
+        stockManager.setDatabaseService(databaseService);
+        String isbn = "0140177396";
+        String locatorCode = stockManager.getLocatorCode(isbn);
+
+        verify(databaseService, times(1)).lookup("0140177396");
+        verify(webService, times(0)).lookup(anyString());
+
+    }
+
+    @Test
+    public void webserviceIsUsedIfDataIsNotPresentInTheDatabase() {
+        ExternalISBNDataService databaseService = mock(ExternalISBNDataService.class, withSettings().lenient());
+        ExternalISBNDataService webService = mock(ExternalISBNDataService.class, withSettings().lenient());
+
+
+        when(databaseService.lookup("0140177396")).thenReturn(null);
+        when(webService.lookup("0140177396")).thenReturn(new Book("0140177396", "abc", "abc"));
+
+        StockManager stockManager = new StockManager();
+        stockManager.setWebService(webService);
+        stockManager.setDatabaseService(databaseService);
+        String isbn = "0140177396";
+        String locatorCode = stockManager.getLocatorCode(isbn);
+
+        verify(databaseService, times(1)).lookup("0140177396");
+        verify(webService, times(1)).lookup("0140177396");
     }
 }
