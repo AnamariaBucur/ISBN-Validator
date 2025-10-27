@@ -18,9 +18,6 @@ public class StockManagementTests {
         stockManager.setWebService(testWebService);
         testDatabaseService = mock(ExternalISBNDataService.class);
         stockManager.setDatabaseService(testDatabaseService);
-
-
-
     }
 
     @Test
@@ -46,7 +43,6 @@ public class StockManagementTests {
 
         verify(testDatabaseService).lookup("0140177396");
         verify(testWebService, never()).lookup(anyString());
-
     }
 
     @Test
